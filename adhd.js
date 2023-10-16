@@ -13,9 +13,13 @@ play()
 	];
 
 	oscillators.forEach((e, i) => {
-		e.connect(ctx.destination);
+		const gain = new GainNode(ctx, { gain: 0.8 });
+		e.connect(gain);
+		gain.connect(ctx.destination);
 		e.start(ctx.currentTime + i * 0.25);
-		e.stop(ctx.currentTime + i * 0.25 + 0.25);
+		gain.gain.exponentialRampToValueAtTime(0.250, ctx.currentTime + i * 0.25 + 0.01);
+		gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.25 + 0.75);
+		e.stop(ctx.currentTime + i * 0.25 + 1.25);
 	});
 }
 
